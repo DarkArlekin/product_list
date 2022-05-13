@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:product_list/core/constants/routes.dart';
+import 'package:product_list/login/bloc/login_bloc.dart';
 import 'package:product_list/user/bloc/user_bloc.dart';
 
 class AppDrawer extends StatelessWidget {
@@ -40,7 +42,8 @@ class AppDrawer extends StatelessWidget {
                   leading: const Icon(Icons.logout),
                   title: const Text('log out'),
                   onTap: () {
-                    Navigator.pop(context);
+                    context.read<LoginBloc>().add(LoggedOutEvent());
+                    Navigator.pushNamed(context, Routes.loadScreen);
                   },
                 ),
               ],
