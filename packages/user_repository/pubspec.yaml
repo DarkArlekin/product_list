@@ -1,5 +1,5 @@
-name: product_list
-description: Datawiz.io test task
+name: user_repository
+description: User repository
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
@@ -12,29 +12,20 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.2
-  # bloc
-  bloc: ^8.0.3
-  flutter_bloc: ^8.0.1
   # object comparison
   equatable: ^2.0.0
   # firebase & login via google
   firebase_core: ^1.16.0
   firebase_auth: ^3.3.17
-  google_sign_in: ^5.3.1
   # advanced http
   dio: ^4.0.6
   # Either must have
   dartz: ^0.10.1
-  user_repository:
-    path: 'packages/user_repository'
-
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^1.0.0
-  bloc_test: ^9.0.3
-  mocktail: ^0.2.0
 
 flutter:
   uses-material-design: true

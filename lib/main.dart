@@ -4,42 +4,45 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:product_list/user/bloc/user_bloc.dart';
 
+/// Import self packages
+import 'package:user_repository/user_repository.dart';
+
 import 'core/constants/theme.dart';
 import 'core/constants/routes.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  String initialRoute = appDefaultRoute;
-  bool isAppRun = false;
-  FirebaseAuth.instance.authStateChanges().listen((User? user) {
-    if (user != null) {
-      initialRoute = Routes.productsScreen;
-    } else {
-      initialRoute = Routes.loginScreen;
-    }
-    if (!isAppRun) {
-      isAppRun = true;
-      BlocOverrides.runZoned(
-            () => runApp(MyApp(initialRoute: initialRoute)),
-      );
-    }
-  });
+void main() {
+  BlocOverrides.runZoned(
+        () async {
+      WidgetsFlutterBinding.ensureInitialized();
+      await Firebase.initializeApp();
+      final userRepository = UserRepository()
+        ..user.first;
+      runApp(MyApp(userRepository: userRepository));
+    },
+    // blocObserver:
+  );
 }
 
 class MyApp extends StatelessWidget {
-  final String initialRoute;
+  final UserRepository userRepository;
 
-  const MyApp({Key? key, required this.initialRoute}) : super(key: key);
+  const MyApp({Key? key, required this.userRepository}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => UserBloc(),
+      lazy: false,
+      create: (context) => UserBloc(userRepository: userRepository),
       child: MaterialApp(
+        builder: (context, child) =>
+            BlocBuilder<UserBloc, UserState>(
+              builder: (context, state) {
+                return child!;
+              },
+            ),
         title: 'Flutter Product List',
         theme: appThemeData,
-        initialRoute: initialRoute,
+        initialRoute: appDefaultRoute,
         routes: appRoutes,
         debugShowCheckedModeBanner: false,
       ),
