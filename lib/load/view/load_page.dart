@@ -11,7 +11,6 @@ class LoadPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: const Icon(Icons.list),
       ),
       body: BlocBuilder<UserBloc, UserState>(
         builder: (context, state) {

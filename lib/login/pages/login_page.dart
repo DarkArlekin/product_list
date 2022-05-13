@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:product_list/core/constants/routes.dart';
 import 'package:product_list/login/bloc/login_bloc.dart';
 import 'package:product_list/login/widgets/widgets.dart';
 
@@ -15,7 +16,6 @@ class LoginPage extends StatelessWidget {
           return Scaffold(
             appBar: AppBar(
               automaticallyImplyLeading: false,
-              title: const Icon(Icons.list),
             ),
             body: Container(
               alignment: Alignment.center,
@@ -24,14 +24,16 @@ class LoginPage extends StatelessWidget {
                 children: [
                   Text(
                     'Вхід',
-                    style: Theme
-                        .of(context)
-                        .textTheme
-                        .headline2,
+                    style: Theme.of(context).textTheme.headline2,
                   ),
-                  const SizedBox(height: 8,),
+                  const SizedBox(
+                    height: 8,
+                  ),
                   LoginButton(handler: () {
                     context.read<LoginBloc>().add(LoggedInEvent());
+                    if (State is LoginSuccess) {
+                      Navigator.pushNamed(context, Routes.productsScreen);
+                    }
                   })
                 ],
               ),

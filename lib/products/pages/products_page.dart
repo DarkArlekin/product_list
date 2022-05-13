@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:product_list/app/widgets/app_bar.dart';
 
 class ProductsPage extends StatelessWidget {
   const ProductsPage({Key? key}) : super(key: key);
@@ -6,10 +7,8 @@ class ProductsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: const Icon(Icons.image),
-      ),
+      appBar: const PreferredSize(
+          child: MainAppBar(), preferredSize: Size(double.infinity, 50)),
       body: Container(
         alignment: Alignment.center,
         child: Column(
@@ -24,6 +23,5 @@ class ProductsPage extends StatelessWidget {
       ),
       extendBodyBehindAppBar: true,
     );
-
   }
 }
