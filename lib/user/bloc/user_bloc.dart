@@ -13,7 +13,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   late final StreamSubscription<UserAnswer>
       _userSubscription;
 
-  UserBloc({required this.userRepository}) : super(UserInitial()) {
+  UserBloc(this.userRepository) : super(UserInitial()) {
     on<UserChangeEvent>(_onUserChange);
     _userSubscription = userRepository.user.listen(
       (userAnswer) {

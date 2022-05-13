@@ -6,7 +6,7 @@ import 'package:user_repository/src/types/types.dart';
 
 import 'models/models.dart';
 
-class UserRepository extends Equatable {
+class UserRepository {
   Stream<UserAnswer> get user {
     return FirebaseAuth.instance.authStateChanges().map((firebaseUser) {
       if (firebaseUser == null) {
@@ -20,8 +20,4 @@ class UserRepository extends Equatable {
               "https://via.placeholder.com/96?text=${displayName[0]}"));
     });
   }
-
-  @override
-  // TODO: implement props
-  List<Object?> get props => throw UnimplementedError();
 }

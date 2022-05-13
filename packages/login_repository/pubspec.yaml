@@ -1,5 +1,5 @@
-name: product_list
-description: Datawiz.io test task
+name: login_repository
+description: Login repository
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
@@ -12,9 +12,6 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.2
-  # bloc
-  bloc: ^8.0.3
-  flutter_bloc: ^8.0.1
   # object comparison
   equatable: ^2.0.0
   # firebase & login via google
@@ -25,18 +22,11 @@ dependencies:
   dio: ^4.0.6
   # Either must have
   dartz: ^0.10.1
-  login_repository:
-    path: 'packages/login_repository'
-  user_repository:
-    path: 'packages/user_repository'
-
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^1.0.0
-  bloc_test: ^9.0.3
-  mocktail: ^0.2.0
 
 flutter:
   uses-material-design: true

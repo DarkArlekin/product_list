@@ -43,7 +43,7 @@ class AppDrawer extends StatelessWidget {
                   title: const Text('log out'),
                   onTap: () {
                     context.read<LoginBloc>().add(LoggedOutEvent());
-                    Navigator.pushNamed(context, Routes.loadScreen);
+                    Navigator.pushNamed(context, Routes.loginScreen);
                   },
                 ),
               ],
