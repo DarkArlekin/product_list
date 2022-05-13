@@ -26,8 +26,8 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     if(event.answer.isLeft()) {
       emit(UserError());
     } else {
-      // todo: set user
-      emit(UserSuccess());
+      final user = event.answer.toOption().toNullable()!;
+      emit(UserSuccess(user: user));
     }
   }
 

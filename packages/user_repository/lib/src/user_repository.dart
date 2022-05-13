@@ -9,7 +9,9 @@ import 'models/models.dart';
 class UserRepository extends Equatable {
   Stream<UserAnswer> get user {
     return FirebaseAuth.instance.authStateChanges().map((firebaseUser) {
-      if (firebaseUser == null) return const Left(UserFailure(""));
+      if (firebaseUser == null) {
+        return const Left(UserFailure("user is not logged in"));
+      }
       final displayName = (firebaseUser.displayName ?? "nameless");
       return Right(UserModel(
           uid: firebaseUser.uid,

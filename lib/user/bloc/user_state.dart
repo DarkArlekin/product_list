@@ -10,8 +10,12 @@ class UserInitial extends UserState {
 }
 
 class UserSuccess extends UserState {
+  final UserModel user;
+
+  const UserSuccess({required this.user});
+
   @override
-  List<Object> get props => [];
+  List<Object> get props => [user];
 }
 
 class UserError extends UserState {

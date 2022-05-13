@@ -34,12 +34,6 @@ class MyApp extends StatelessWidget {
       lazy: false,
       create: (context) => UserBloc(userRepository: userRepository),
       child: MaterialApp(
-        builder: (context, child) =>
-            BlocBuilder<UserBloc, UserState>(
-              builder: (context, state) {
-                return child!;
-              },
-            ),
         title: 'Flutter Product List',
         theme: appThemeData,
         initialRoute: appDefaultRoute,

@@ -10,6 +10,5 @@ class UserChangeEvent extends UserEvent {
   const UserChangeEvent(this.answer);
 
   @override
-  // TODO: implement props
-  List<Object?> get props => [];
+  List<Object> get props => [answer];
 }
