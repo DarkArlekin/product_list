@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:product_list/app/widgets/app_bar.dart';
+import 'package:product_list/app/widgets/app_drawer.dart';
 
 class ProductsPage extends StatelessWidget {
   const ProductsPage({Key? key}) : super(key: key);
@@ -8,7 +9,7 @@ class ProductsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const PreferredSize(
-          child: MainAppBar(), preferredSize: Size(double.infinity, 50)),
+          child: MainAppBar(), preferredSize: Size(double.infinity, 60)),
       body: Container(
         alignment: Alignment.center,
         child: Column(
@@ -21,6 +22,7 @@ class ProductsPage extends StatelessWidget {
           ],
         ),
       ),
+      drawer: const AppDrawer(),
       extendBodyBehindAppBar: true,
     );
   }

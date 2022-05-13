@@ -5,9 +5,6 @@ class MainAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppBar(
-      automaticallyImplyLeading: false,
-      title: const Icon(Icons.list),
-    );
+    return AppBar();
   }
 }
