@@ -14,6 +14,7 @@ class LoginPage extends StatelessWidget {
         builder: (context, state) {
           return Scaffold(
             appBar: AppBar(
+              automaticallyImplyLeading: false,
               title: const Icon(Icons.list),
             ),
             body: Container(

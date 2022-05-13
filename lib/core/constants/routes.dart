@@ -9,7 +9,7 @@ class Routes {
 }
 
 /// App initial route
-const appInitialRoute = Routes.loginScreen;
+const appDefaultRoute = Routes.loginScreen;
 
 /// App route system
 final Map<String, WidgetBuilder> appRoutes = {

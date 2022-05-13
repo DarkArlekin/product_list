@@ -1,4 +1,4 @@
-import 'package:bloc/bloc.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,14 +10,27 @@ import 'core/constants/routes.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  BlocOverrides.runZoned(
-        () => runApp(const MyApp()),
-    // blocObserver: ,
-  );
+  String initialRoute = appDefaultRoute;
+  bool isAppRun = false;
+  FirebaseAuth.instance.authStateChanges().listen((User? user) {
+    if (user != null) {
+      initialRoute = Routes.productsScreen;
+    } else {
+      initialRoute = Routes.loginScreen;
+    }
+    if (!isAppRun) {
+      isAppRun = true;
+      BlocOverrides.runZoned(
+            () => runApp(MyApp(initialRoute: initialRoute)),
+      );
+    }
+  });
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  final String initialRoute;
+
+  const MyApp({Key? key, required this.initialRoute}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -26,12 +39,10 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Flutter Product List',
         theme: appThemeData,
-        initialRoute: appInitialRoute,
+        initialRoute: initialRoute,
         routes: appRoutes,
         debugShowCheckedModeBanner: false,
       ),
     );
   }
 }
-
-
