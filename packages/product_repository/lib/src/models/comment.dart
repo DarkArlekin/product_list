@@ -14,7 +14,7 @@ class Comment extends Equatable {
 
   @override
   // TODO: implement props
-  List<Object> get props => [createdBy, createdBy, text, uid];
+  List<Object> get props => [createdDate, createdBy, text, uid];
 
   /// Connect the generated [_$CommentFromJson] function to the `fromJson`
   /// factory.
