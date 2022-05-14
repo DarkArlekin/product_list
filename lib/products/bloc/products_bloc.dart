@@ -14,14 +14,29 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
   late final StreamSubscription _productSubscription;
 
   ProductsBloc(this.productRepository) : super(ProductsInitial()) {
-    on<ProductsAddEvent>(_onProductAdd);
-    _productSubscription = productRepository.getAllProducts().listen((event) {
-      // todo: create handler
+    on<ProductsAddEvent>(_onProductsAdd);
+    on<ProductsGetEvent>(_onProductsGet);
+    _productSubscription = productRepository.getAllProducts().listen((products) {
+      add(ProductsGetEvent(products));
     });
     // productRepository.
   }
 
-  _onProductAdd(ProductsAddEvent event, Emitter<ProductsState> emit) {
+  _onProductsGet(ProductsGetEvent event, Emitter<ProductsState> emit) {
+    // print(event.products);
+
+    if (state is ProductsSuccess) {
+      emit(
+         (state as ProductsSuccess).copyWith(products: event.products)
+      );
+    } else {
+      emit(
+          ProductsSuccess(products: event.products)
+      );
+    }
+  }
+
+  _onProductsAdd(ProductsAddEvent event, Emitter<ProductsState> emit) {
     productRepository.createProduct(ProductModel(
       title: event.title,
       barCode: event.barCode,

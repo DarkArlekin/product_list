@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:product_repository/product_repository.dart';
@@ -22,11 +21,6 @@ class ProductModel extends Equatable {
 
   @override
   List<Object> get props => [title, barCode, dateCreated, comments, uid];
-
-  static ProductModel fromSnapshot(DocumentSnapshot snap) {
-    // todo: implement method [fromSnapshot]
-    return ProductModel();
-  }
 
   /// Connect the generated [_$ProductModelFromJson] function to the `fromJson`
   /// factory.
