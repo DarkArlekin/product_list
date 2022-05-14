@@ -1,5 +1,5 @@
-name: login_repository
-description: Login repository
+name: product_repository
+description: Product repository
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
@@ -11,22 +11,23 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  cupertino_icons: ^1.0.2
   # object comparison
   equatable: ^2.0.0
   # firebase & login via google
   firebase_core: ^1.16.0
-  firebase_auth: ^3.3.17
-  google_sign_in: ^5.3.1
-  # advanced http
-  dio: ^4.0.6
+  cloud_firestore: ^3.1.15
   # Either must have
   dartz: ^0.10.1
+  # easy create to/from json
+  json_annotation: ^4.5.0
+  uuid: ^3.0.6
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^1.0.0
+  build_runner: ^2.1.10
+  json_serializable: ^6.2.0
 
 flutter:
   uses-material-design: true

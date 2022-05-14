@@ -21,14 +21,19 @@ dependencies:
   firebase_core: ^1.16.0
   firebase_auth: ^3.3.17
   google_sign_in: ^5.3.1
+  cloud_firestore: ^3.1.15
   # advanced http
   dio: ^4.0.6
   # Either must have
   dartz: ^0.10.1
+  # easy create to/from json
+  json_annotation: ^4.5.0
   login_repository:
     path: 'packages/login_repository'
   user_repository:
     path: 'packages/user_repository'
+  product_repository:
+    path: 'packages/product_repository'
 
 
 dev_dependencies:
@@ -37,6 +42,8 @@ dev_dependencies:
   flutter_lints: ^1.0.0
   bloc_test: ^9.0.3
   mocktail: ^0.2.0
+  json_serializable: ^6.2.0
+  build_runner: ^2.1.10
 
 flutter:
   uses-material-design: true

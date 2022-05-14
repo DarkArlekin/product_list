@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:product_list/app/widgets/app_bar.dart';
 import 'package:product_list/app/widgets/app_drawer.dart';
+import 'package:product_list/products/bloc/products_bloc.dart';
+import 'package:product_repository/product_repository.dart';
 import 'products_list.dart';
 
 class ProductsPage extends StatelessWidget {
@@ -8,12 +11,17 @@ class ProductsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      appBar: PreferredSize(
-          child: MainAppBar(), preferredSize: Size(double.infinity, 60)),
-      body: ProductList(),
-      drawer: AppDrawer(),
-      extendBodyBehindAppBar: true,
+    return BlocProvider(
+      // todo remove
+      lazy: false,
+      create: (context) => ProductsBloc(ProductRepository()),
+      child: const Scaffold(
+        appBar: PreferredSize(
+            child: MainAppBar(), preferredSize: Size(double.infinity, 60)),
+        body: ProductList(),
+        drawer: AppDrawer(),
+        extendBodyBehindAppBar: true,
+      ),
     );
   }
 }
