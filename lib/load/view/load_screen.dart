@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:product_list/core/constants/routes.dart';
 import 'package:product_list/user/bloc/user_bloc.dart';
 
-class LoadPage extends StatelessWidget {
-  const LoadPage({Key? key}) : super(key: key);
+class LoadScreen extends StatelessWidget {
+  const LoadScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

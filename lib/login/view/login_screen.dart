@@ -4,8 +4,8 @@ import 'package:product_list/core/constants/routes.dart';
 import 'package:product_list/login/bloc/login_bloc.dart';
 import 'package:product_list/login/widgets/widgets.dart';
 
-class LoginPage extends StatelessWidget {
-  const LoginPage({Key? key}) : super(key: key);
+class LoginScreen extends StatelessWidget {
+  const LoginScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
