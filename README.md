@@ -1,3 +1,3 @@
 # product_list
 
-Datawiz.io test task
+Product list test task
