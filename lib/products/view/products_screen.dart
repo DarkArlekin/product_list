@@ -27,7 +27,7 @@ class ProductsScreen extends StatelessWidget {
         bottomNavigationBar: AppBottomBar(onTap: () {
           showDialog(
             context: context,
-            builder: (BuildContext context) => const AlertFormDialog(),
+            builder: (BuildContext context) => AlertFormDialog(),
           );
         }),
         extendBodyBehindAppBar: true,
