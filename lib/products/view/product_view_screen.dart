@@ -7,6 +7,8 @@ import 'package:product_list/app/widgets/app_drawer.dart';
 import 'package:product_list/core/constants/validators.dart';
 import 'package:product_list/products/bloc/products_bloc.dart';
 import 'package:product_list/products/view/product_view_layout.dart';
+import 'package:product_list/products/widgets/product_comment_selected_wrapper.dart';
+import 'package:product_list/products/widgets/product_header.dart';
 import 'package:product_list/products/widgets/widgets.dart';
 import 'package:product_list/user/bloc/user_bloc.dart';
 import 'package:product_repository/product_repository.dart';
@@ -19,6 +21,8 @@ class ProductViewArguments extends Equatable {
   @override
   List<Object> get props => [uid];
 }
+
+// todo: decompose to widgets
 
 class ProductViewScreen extends StatelessWidget {
   const ProductViewScreen({Key? key}) : super(key: key);
@@ -63,30 +67,50 @@ class ProductViewScreen extends StatelessWidget {
                 preferredSize: const Size(double.infinity, 60)),
             body: ProductViewLayout(
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text("Bar code: ${currentProduct.barCode}"),
-                    Text(
-                        "Created date: ${createdAtDate.day}.${createdAtDate.month}.${createdAtDate.year}"),
-                  ],
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
+                ProductHeader(
+                    barCode: currentProduct.barCode,
+                    createdDate:
+                        "${createdAtDate.day}.${createdAtDate.month}.${createdAtDate.year}"),
                 if (currentProduct.comments.isNotEmpty)
                   Padding(
-                    padding: const EdgeInsets.only(bottom: 16.0),
+                    padding: const EdgeInsets.only(
+                        bottom: 16.0, left: 16, right: 16),
                     child: Text(
                       "Comments: ",
                       style: Theme.of(context).textTheme.headline5,
                     ),
                   ),
-                ...currentProduct.comments.map((comment) => ProductComment(
-                      createdDate: comment.dateCreated,
-                      text: comment.text,
-                      createdBy: comment.createdBy,
-                    )),
+                ...currentProduct.comments.map((comment) {
+                  final commentWidget = ProductComment(
+                    createdDate: comment.dateCreated,
+                    text: comment.text,
+                    createdBy: comment.createdBy,
+                  );
+                  return comment.uid == state.selectedUid
+                      ? InkWell(
+                          child: ProductCommentSelectedWrapper(
+                              onTap: () {
+                                context.read<ProductsBloc>().add(
+                                    ProductsCommentRemoveEvent(
+                                        currentProduct.uid,
+                                        comment: comment));
+                              },
+                              child: commentWidget),
+                          onTap: () {
+                            context
+                                .read<ProductsBloc>()
+                                .add(const ProductsSelectEvent(""));
+                          },
+                        )
+                      : InkWell(
+                          child: commentWidget,
+                          onLongPress: () {
+                            context
+                                .read<ProductsBloc>()
+                                .add(ProductsSelectEvent(comment.uid));
+                          },
+                        );
+                }),
               ],
             ),
             bottomNavigationBar: AppBottomBar(

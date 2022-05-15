@@ -41,4 +41,16 @@ class ProductRepository {
       }
     });
   }
+
+  void removeProductComment(String uid, Comment comment) {
+    productCollection.where("uid", isEqualTo: uid).get().then((event) {
+      if (event.docs.isNotEmpty) {
+        final QueryDocumentSnapshot<Map<String, dynamic>> document =
+            event.docs.single;
+        document.reference.set({
+          "comments": FieldValue.arrayRemove([comment.toJson()]),
+        }, SetOptions(merge: true));
+      }
+    });
+  }
 }

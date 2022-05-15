@@ -10,8 +10,6 @@ class ProductViewLayout extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(
         top: 115,
-        left: 16,
-        right: 16,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

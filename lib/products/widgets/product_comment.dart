@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:product_list/products/widgets/product_view_action.dart';
 
 class ProductComment extends StatelessWidget {
   final String createdBy;
@@ -15,9 +16,8 @@ class ProductComment extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final createdAtDate = DateTime.parse(createdDate);
-
     return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0),
+      padding: const EdgeInsets.all(8.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [

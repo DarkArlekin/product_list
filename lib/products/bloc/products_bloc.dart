@@ -18,6 +18,8 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
     on<ProductsAddEvent>(_onProductsAdd);
     on<ProductsRemoveEvent>(_onProductsRemove);
     on<ProductsCommentAddEvent>(_onProductsCommentAdd);
+    on<ProductsCommentRemoveEvent>(_onProductsCommentRemove);
+    on<ProductsSelectEvent>(_onProductsSelectEvent);
     _productSubscription =
         productRepository.getAllProducts().listen((products) {
       add(ProductsGetEvent(products));
@@ -55,6 +57,20 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
             text: event.text,
             dateCreated: DateTime.now().toString(),
             uid: const Uuid().v4()));
+  }
+
+  _onProductsCommentRemove(
+      ProductsCommentRemoveEvent event, Emitter<ProductsState> emit) {
+    productRepository.removeProductComment(event.uid, event.comment);
+  }
+
+  _onProductsSelectEvent(
+      ProductsSelectEvent event, Emitter<ProductsState> emit) {
+    if (state is ProductsSuccess) {
+      emit((state as ProductsSuccess).copyWith(
+        selectedUid: event.uid,
+      ));
+    }
   }
 
   @override
