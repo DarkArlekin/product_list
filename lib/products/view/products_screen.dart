@@ -13,13 +13,14 @@ class ProductsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final productsBloc = BlocProvider.of<ProductsBloc>(context);
-
+    print(productsBloc);
     return BlocProvider(
       create: (context) => productsBloc,
       child: Scaffold(
         appBar: const PreferredSize(
             child: MainAppBar(
               title: "Products",
+              actions: [],
             ),
             preferredSize: Size(double.infinity, 60)),
         body: const ProductList(),
@@ -53,9 +54,12 @@ class ProductsScreen extends StatelessWidget {
                 ),
               ],
               onSubmit: (dialogTextFields) {
-                DialogTextField findByKey(String key) => dialogTextFields.firstWhere((dialogTextField) => dialogTextField.key == key);
-                productsBloc
-                    .add(ProductsAddEvent(title: findByKey("title").value, barCode: findByKey("barCode").value));
+                DialogTextField findByKey(String key) =>
+                    dialogTextFields.firstWhere(
+                        (dialogTextField) => dialogTextField.key == key);
+                productsBloc.add(ProductsAddEvent(
+                    title: findByKey("title").value,
+                    barCode: findByKey("barCode").value));
               },
             ),
           );

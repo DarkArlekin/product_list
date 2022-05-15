@@ -5,6 +5,7 @@ import 'package:product_list/app/widgets/app_bar.dart';
 import 'package:product_list/app/widgets/app_drawer.dart';
 import 'package:product_list/products/bloc/products_bloc.dart';
 import 'package:product_list/products/widgets/product_comment.dart';
+import 'package:product_repository/product_repository.dart';
 
 class ProductViewArguments extends Equatable {
   final String uid;
@@ -30,14 +31,44 @@ class ProductViewScreen extends StatelessWidget {
       child: BlocBuilder<ProductsBloc, ProductsState>(
         builder: (context, state) {
           state as ProductsSuccess;
-          final currentProduct = state.products
-              .firstWhere((product) => product.uid == arguments.uid);
+          final ProductModel currentProduct = state.products.firstWhere(
+              (product) => product.uid == arguments.uid,
+              orElse: () => state.products.first);
           final createdAtDate = DateTime.parse(currentProduct.dateCreated);
 
           return Scaffold(
             appBar: PreferredSize(
                 child: MainAppBar(
                   title: currentProduct.title,
+                  actions: [
+                    Padding(
+                      padding: const EdgeInsets.only(right: 16.0),
+                      child: Center(
+                        child: DropdownButton<String>(
+                          icon: const Icon(
+                            Icons.more_vert,
+                            color: Colors.black,
+                          ),
+                          elevation: 16,
+                          onChanged: (String? newValue) {
+                            if (newValue == null) return;
+                            if (newValue == "remove") {
+                              Navigator.pop(context);
+                              context
+                                  .read<ProductsBloc>()
+                                  .add(ProductsRemoveEvent(currentProduct.uid));
+                            }
+                          },
+                          items: const [
+                            DropdownMenuItem(
+                              child: Text("remove"),
+                              value: "remove",
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 preferredSize: const Size(double.infinity, 60)),
             body: Padding(
@@ -60,7 +91,6 @@ class ProductViewScreen extends StatelessWidget {
                 ],
               ),
             ),
-            drawer: const AppDrawer(),
             extendBodyBehindAppBar: true,
           );
         },

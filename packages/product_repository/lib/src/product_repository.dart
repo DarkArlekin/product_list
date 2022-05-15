@@ -8,14 +8,24 @@ class ProductRepository {
 
   // todo: add either
   Stream<List<ProductModel>> getAllProducts() {
-      return productCollection.snapshots().map((snapshot) {
-        return snapshot.docs
-            .map((doc) => ProductModel.fromJson(doc.data()))
-            .toList();
-      });
+    return productCollection.snapshots().map((snapshot) {
+      return snapshot.docs
+          .map((doc) => ProductModel.fromJson(doc.data()))
+          .toList();
+    });
   }
 
   void createProduct(ProductModel productModel) {
     productCollection.add(productModel.toJson());
+  }
+
+  void removeProduct(String uid) {
+    productCollection.where("uid", isEqualTo: uid).get().then((event) {
+      if (event.docs.isNotEmpty) {
+        DocumentReference<Map<String, dynamic>> document =
+            event.docs.single.reference;
+        document.delete();
+      }
+    });
   }
 }

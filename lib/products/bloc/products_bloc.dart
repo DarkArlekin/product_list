@@ -15,6 +15,7 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
 
   ProductsBloc(this.productRepository) : super(ProductsInitial()) {
     on<ProductsAddEvent>(_onProductsAdd);
+    on<ProductsRemoveEvent>(_onProductsRemove);
     on<ProductsGetEvent>(_onProductsGet);
     _productSubscription = productRepository.getAllProducts().listen((products) {
       add(ProductsGetEvent(products));
@@ -43,6 +44,10 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
       dateCreated: DateTime.now().toString(),
       uid: const Uuid().v4(),
     ));
+  }
+
+  _onProductsRemove(ProductsRemoveEvent event, Emitter<ProductsState> emit) {
+    productRepository.removeProduct(event.uid);
   }
 
   @override

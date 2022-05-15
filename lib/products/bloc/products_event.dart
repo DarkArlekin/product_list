@@ -17,6 +17,15 @@ class ProductsAddEvent extends ProductsEvent {
   List<Object> get props => [title, barCode];
 }
 
+class ProductsRemoveEvent extends ProductsEvent {
+  final String uid;
+
+  const ProductsRemoveEvent(this.uid);
+
+  @override
+  List<Object> get props => [uid];
+}
+
 class ProductsGetEvent extends ProductsEvent {
   final List<ProductModel> products;
 
@@ -24,5 +33,4 @@ class ProductsGetEvent extends ProductsEvent {
 
   @override
   List<Object> get props => [products];
-
 }
