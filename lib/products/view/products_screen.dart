@@ -63,7 +63,7 @@ class ProductsScreen extends StatelessWidget {
               },
             ),
           );
-        }),
+        }, annotation: "add product",),
         extendBodyBehindAppBar: true,
         extendBody: true,
       ),

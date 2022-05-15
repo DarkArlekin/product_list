@@ -78,16 +78,29 @@ class ProductViewScreen extends StatelessWidget {
                 right: 16,
               ),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("Bar code: ${currentProduct.barCode}"),
-                  Text(
-                      "Created date: ${createdAtDate.day}.${createdAtDate.month}.${createdAtDate.year}"),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("Bar code: ${currentProduct.barCode}"),
+                      Text(
+                          "Created date: ${createdAtDate.day}.${createdAtDate.month}.${createdAtDate.year}"),
+                    ],
+                  ),
                   const SizedBox(
                     height: 20,
                   ),
-                  const Text("Product comments: "),
+                  if (currentProduct.comments.isNotEmpty)
+                     Padding(
+                      padding: const EdgeInsets.only(bottom: 16.0),
+                      child: Text("Comments: ", style: Theme.of(context).textTheme.headline5,),
+                    ),
                   ...currentProduct.comments.map((comment) => ProductComment(
-                      createdDate: comment.createdDate, text: comment.text)),
+                        createdDate: comment.createdDate,
+                        text: comment.text,
+                        createdBy: comment.createdBy,
+                      )),
                 ],
               ),
             ),
