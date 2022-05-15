@@ -21,11 +21,13 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
     on<ProductsCommentRemoveEvent>(_onProductsCommentRemove);
     on<ProductsSelectEvent>(_onProductsSelectEvent);
     _productSubscription =
-        productRepository.getAllProducts().listen((products) {
-      add(ProductsGetEvent(products), );
-    }, onError: (Object error) {
-          print('error');
-        });
+        productRepository.getAllProducts().listen((productsEither) {
+          if(productsEither.isRight()) {
+            add(
+              ProductsGetEvent(productsEither.toOption().toNullable() ?? []),
+            );
+          }
+    });
     // productRepository.
   }
 

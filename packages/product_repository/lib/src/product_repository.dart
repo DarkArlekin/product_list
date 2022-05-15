@@ -8,11 +8,15 @@ class ProductRepository {
   final productCollection = FirebaseFirestore.instance.collection('products');
 
   // todo: add either
-  Stream<List<ProductModel>> getAllProducts() {
+  Stream<Either<ProductFailure, List<ProductModel>>> getAllProducts() {
     return productCollection.snapshots().map((snapshot) {
-      return snapshot.docs
-          .map((doc) => ProductModel.fromJson(doc.data()))
-          .toList();
+      try {
+        return Right(snapshot.docs
+            .map((doc) => ProductModel.fromJson(doc.data()))
+            .toList());
+      } catch (_) {
+        return const Left(ProductFailure("fail in getting data from snapshot"));
+      }
     });
   }
 
