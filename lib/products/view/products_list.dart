@@ -29,14 +29,20 @@ class ProductList extends StatelessWidget {
             ),
           );
         }
-        return Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Products',
-              style: Theme.of(context).textTheme.headline2,
-            ),
-          ],
+        return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Products',
+                style: Theme.of(context).textTheme.headline2,
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              const CircularProgressIndicator(),
+            ],
+          ),
         );
       },
     );

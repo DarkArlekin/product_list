@@ -14,26 +14,22 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
   late final StreamSubscription _productSubscription;
 
   ProductsBloc(this.productRepository) : super(ProductsInitial()) {
+    on<ProductsGetEvent>(_onProductsGet);
     on<ProductsAddEvent>(_onProductsAdd);
     on<ProductsRemoveEvent>(_onProductsRemove);
-    on<ProductsGetEvent>(_onProductsGet);
-    _productSubscription = productRepository.getAllProducts().listen((products) {
+    on<ProductsCommentAddEvent>(_onProductsCommentAdd);
+    _productSubscription =
+        productRepository.getAllProducts().listen((products) {
       add(ProductsGetEvent(products));
     });
     // productRepository.
   }
 
   _onProductsGet(ProductsGetEvent event, Emitter<ProductsState> emit) {
-    // print(event.products);
-
     if (state is ProductsSuccess) {
-      emit(
-         (state as ProductsSuccess).copyWith(products: event.products)
-      );
+      emit((state as ProductsSuccess).copyWith(products: event.products));
     } else {
-      emit(
-          ProductsSuccess(products: event.products)
-      );
+      emit(ProductsSuccess(products: event.products));
     }
   }
 
@@ -48,6 +44,17 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
 
   _onProductsRemove(ProductsRemoveEvent event, Emitter<ProductsState> emit) {
     productRepository.removeProduct(event.uid);
+  }
+
+  _onProductsCommentAdd(
+      ProductsCommentAddEvent event, Emitter<ProductsState> emit) {
+    productRepository.addProductComment(
+        event.uid,
+        Comment(
+            createdBy: event.createdBy,
+            text: event.text,
+            dateCreated: DateTime.now().toString(),
+            uid: const Uuid().v4()));
   }
 
   @override

@@ -26,6 +26,17 @@ class ProductsRemoveEvent extends ProductsEvent {
   List<Object> get props => [uid];
 }
 
+class ProductsCommentAddEvent extends ProductsEvent {
+  final String uid;
+  final String text;
+  final String createdBy;
+
+  const ProductsCommentAddEvent(this.uid, {required this.text, required this.createdBy});
+
+  @override
+  List<Object> get props => [text, createdBy, uid];
+}
+
 class ProductsGetEvent extends ProductsEvent {
   final List<ProductModel> products;
 

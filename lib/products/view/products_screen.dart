@@ -49,6 +49,7 @@ class ProductsScreen extends StatelessWidget {
                 productsBloc.add(ProductsAddEvent(
                     title: findByKey("title").value,
                     barCode: findByKey("barCode").value));
+                Navigator.pop(context);
               },
             ),
           );

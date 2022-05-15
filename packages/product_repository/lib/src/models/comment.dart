@@ -6,15 +6,15 @@ part 'comment.g.dart';
 @JsonSerializable()
 class Comment extends Equatable {
   final String createdBy;
-  final String createdDate;
+  final String dateCreated;
   final String text;
   final String uid;
 
-  const Comment({required this.createdBy, required this.createdDate, required this.text, required this.uid});
+  const Comment({required this.createdBy, required this.dateCreated, required this.text, required this.uid});
 
   @override
   // TODO: implement props
-  List<Object> get props => [createdDate, createdBy, text, uid];
+  List<Object> get props => [dateCreated, createdBy, text, uid];
 
   /// Connect the generated [_$CommentFromJson] function to the `fromJson`
   /// factory.

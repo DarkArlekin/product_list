@@ -2,10 +2,13 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:product_list/app/widgets/app_bar.dart';
+import 'package:product_list/app/widgets/app_bottom_bar.dart';
 import 'package:product_list/app/widgets/app_drawer.dart';
+import 'package:product_list/core/constants/validators.dart';
 import 'package:product_list/products/bloc/products_bloc.dart';
-import 'package:product_list/products/view/product_view_body.dart';
+import 'package:product_list/products/view/product_view_layout.dart';
 import 'package:product_list/products/widgets/widgets.dart';
+import 'package:product_list/user/bloc/user_bloc.dart';
 import 'package:product_repository/product_repository.dart';
 
 class ProductViewArguments extends Equatable {
@@ -46,10 +49,10 @@ class ProductViewScreen extends StatelessWidget {
                       onChanged: (String? newValue) {
                         if (newValue == null) return;
                         if (newValue == "remove") {
-                          Navigator.pop(context);
                           context
                               .read<ProductsBloc>()
                               .add(ProductsRemoveEvent(currentProduct.uid));
+                          Navigator.pop(context);
                         }
                       },
                       menuKey: 'remove',
@@ -80,12 +83,43 @@ class ProductViewScreen extends StatelessWidget {
                     ),
                   ),
                 ...currentProduct.comments.map((comment) => ProductComment(
-                      createdDate: comment.createdDate,
+                      createdDate: comment.dateCreated,
                       text: comment.text,
                       createdBy: comment.createdBy,
                     )),
               ],
             ),
+            bottomNavigationBar: AppBottomBar(
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) => AlertFormDialog(
+                    textFields: [
+                      DialogTextField(
+                        hintText: 'Comment',
+                        key: 'text',
+                        validator: Validators.isEmpty,
+                      ),
+                    ],
+                    onSubmit: (dialogTextFields) {
+                      DialogTextField findByKey(String key) =>
+                          dialogTextFields.firstWhere(
+                              (dialogTextField) => dialogTextField.key == key);
+                      productsBloc.add(ProductsCommentAddEvent(
+                          currentProduct.uid,
+                          text: findByKey("text").value,
+                          createdBy: (BlocProvider.of<UserBloc>(context).state
+                                  as UserSuccess)
+                              .user
+                              .displayName));
+                      Navigator.pop(context);
+                    },
+                  ),
+                );
+              },
+              annotation: "add comment",
+            ),
+            extendBody: true,
             extendBodyBehindAppBar: true,
           );
         },

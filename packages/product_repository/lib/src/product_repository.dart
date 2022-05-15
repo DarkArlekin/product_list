@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:product_repository/error/failure.dart';
+import 'package:product_repository/src/models/comment.dart';
 import 'package:product_repository/src/models/product_model.dart';
 
 class ProductRepository {
@@ -17,6 +18,18 @@ class ProductRepository {
 
   void createProduct(ProductModel productModel) {
     productCollection.add(productModel.toJson());
+  }
+
+  void addProductComment(String uid, Comment comment) {
+    productCollection.where("uid", isEqualTo: uid).get().then((event) {
+      if (event.docs.isNotEmpty) {
+        final DocumentReference<Map<String, dynamic>> document =
+            event.docs.single.reference;
+        document.set({
+          "comments": FieldValue.arrayUnion([comment.toJson()]),
+        }, SetOptions(merge: true));
+      }
+    });
   }
 
   void removeProduct(String uid) {

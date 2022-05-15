@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:collection/collection.dart';
 
 class DialogTextField extends Equatable {
   final String key;
@@ -30,7 +31,11 @@ class AlertFormDialog extends StatelessWidget {
   final void Function(List<DialogTextField>) onSubmit;
   bool isValid = false;
 
-  AlertFormDialog({Key? key, required this.textFields, required this.onSubmit,}) : super(key: key);
+  AlertFormDialog({
+    Key? key,
+    required this.textFields,
+    required this.onSubmit,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +74,6 @@ class AlertFormDialog extends StatelessWidget {
                     onPressed: () {
                       if (isValid) {
                         onSubmit(textFields);
-                        Navigator.pop(context);
                       }
                     },
                     child: const Text("Submit"))
@@ -112,8 +116,8 @@ class _AlertFormState extends State<AlertForm> {
       }
     }
 
-    final DialogTextField? barFormField =
-        widget.textFields.firstWhere((textField) => textField.key == "barCode");
+    final DialogTextField? barFormField = widget.textFields
+        .firstWhereOrNull((textField) => textField.key == "barCode");
     if (barFormField != null) {
       barFormField.controller.addListener(() {
         WidgetsBinding.instance?.addPostFrameCallback((_) => onChanged());
@@ -157,6 +161,14 @@ class _AlertFormState extends State<AlertForm> {
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    for (final DialogTextField textField in widget.textFields) {
+      textField.controller.dispose();
+    }
+    super.dispose();
   }
 }
 
