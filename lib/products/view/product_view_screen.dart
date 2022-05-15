@@ -4,7 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:product_list/app/widgets/app_bar.dart';
 import 'package:product_list/app/widgets/app_drawer.dart';
 import 'package:product_list/products/bloc/products_bloc.dart';
-import 'package:product_list/products/widgets/product_comment.dart';
+import 'package:product_list/products/view/product_view_body.dart';
+import 'package:product_list/products/widgets/widgets.dart';
 import 'package:product_repository/product_repository.dart';
 
 class ProductViewArguments extends Equatable {
@@ -41,68 +42,49 @@ class ProductViewScreen extends StatelessWidget {
                 child: MainAppBar(
                   title: currentProduct.title,
                   actions: [
-                    Padding(
-                      padding: const EdgeInsets.only(right: 16.0),
-                      child: Center(
-                        child: DropdownButton<String>(
-                          icon: const Icon(
-                            Icons.more_vert,
-                            color: Colors.black,
-                          ),
-                          elevation: 16,
-                          onChanged: (String? newValue) {
-                            if (newValue == null) return;
-                            if (newValue == "remove") {
-                              Navigator.pop(context);
-                              context
-                                  .read<ProductsBloc>()
-                                  .add(ProductsRemoveEvent(currentProduct.uid));
-                            }
-                          },
-                          items: const [
-                            DropdownMenuItem(
-                              child: Text("remove"),
-                              value: "remove",
-                            ),
-                          ],
-                        ),
-                      ),
+                    ProductViewAction(
+                      onChanged: (String? newValue) {
+                        if (newValue == null) return;
+                        if (newValue == "remove") {
+                          Navigator.pop(context);
+                          context
+                              .read<ProductsBloc>()
+                              .add(ProductsRemoveEvent(currentProduct.uid));
+                        }
+                      },
+                      menuKey: 'remove',
+                      icon: Icons.more_vert,
                     ),
                   ],
                 ),
                 preferredSize: const Size(double.infinity, 60)),
-            body: Padding(
-              padding: const EdgeInsets.only(
-                top: 115,
-                left: 16,
-                right: 16,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text("Bar code: ${currentProduct.barCode}"),
-                      Text(
-                          "Created date: ${createdAtDate.day}.${createdAtDate.month}.${createdAtDate.year}"),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  if (currentProduct.comments.isNotEmpty)
-                     Padding(
-                      padding: const EdgeInsets.only(bottom: 16.0),
-                      child: Text("Comments: ", style: Theme.of(context).textTheme.headline5,),
+            body: ProductViewLayout(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text("Bar code: ${currentProduct.barCode}"),
+                    Text(
+                        "Created date: ${createdAtDate.day}.${createdAtDate.month}.${createdAtDate.year}"),
+                  ],
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                if (currentProduct.comments.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 16.0),
+                    child: Text(
+                      "Comments: ",
+                      style: Theme.of(context).textTheme.headline5,
                     ),
-                  ...currentProduct.comments.map((comment) => ProductComment(
-                        createdDate: comment.createdDate,
-                        text: comment.text,
-                        createdBy: comment.createdBy,
-                      )),
-                ],
-              ),
+                  ),
+                ...currentProduct.comments.map((comment) => ProductComment(
+                      createdDate: comment.createdDate,
+                      text: comment.text,
+                      createdBy: comment.createdBy,
+                    )),
+              ],
             ),
             extendBodyBehindAppBar: true,
           );

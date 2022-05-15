@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:product_list/app/widgets/app_bar.dart';
 import 'package:product_list/app/widgets/app_bottom_bar.dart';
 import 'package:product_list/app/widgets/app_drawer.dart';
+import 'package:product_list/core/constants/validators.dart';
 import 'package:product_list/products/bloc/products_bloc.dart';
 import 'package:product_list/products/widgets/alert_form_dialog.dart';
 import 'products_list.dart';
@@ -13,7 +14,7 @@ class ProductsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final productsBloc = BlocProvider.of<ProductsBloc>(context);
-    print(productsBloc);
+    // todo: add event transformer
     return BlocProvider(
       create: (context) => productsBloc,
       child: Scaffold(
@@ -33,24 +34,12 @@ class ProductsScreen extends StatelessWidget {
                 DialogTextField(
                   hintText: 'Product Title',
                   key: 'title',
-                  validator: (String? value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter some text';
-                    }
-                    return null;
-                  },
+                  validator: Validators.isEmpty,
                 ),
                 DialogTextField(
                   hintText: 'Bar Code',
                   key: 'barCode',
-                  validator: (String? value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter some text';
-                    } else if (value.length != 9) {
-                      return 'Bar code must have 9 symbols';
-                    }
-                    return null;
-                  },
+                  validator: Validators.barCode,
                 ),
               ],
               onSubmit: (dialogTextFields) {
