@@ -27,9 +27,10 @@ class DialogTextField extends Equatable {
 class AlertFormDialog extends StatelessWidget {
   // StatelessWidget because don`t need rebuild on change [isValid]
   final List<DialogTextField> textFields;
+  final void Function(List<DialogTextField>) onSubmit;
   bool isValid = false;
 
-  AlertFormDialog({Key? key, required this.textFields}) : super(key: key);
+  AlertFormDialog({Key? key, required this.textFields, required this.onSubmit,}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -67,6 +68,7 @@ class AlertFormDialog extends StatelessWidget {
                 TextButton(
                     onPressed: () {
                       if (isValid) {
+                        onSubmit(textFields);
                         Navigator.pop(context);
                       }
                     },

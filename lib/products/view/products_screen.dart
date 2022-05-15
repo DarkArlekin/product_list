@@ -52,6 +52,11 @@ class ProductsScreen extends StatelessWidget {
                   },
                 ),
               ],
+              onSubmit: (dialogTextFields) {
+                DialogTextField findByKey(String key) => dialogTextFields.firstWhere((dialogTextField) => dialogTextField.key == key);
+                productsBloc
+                    .add(ProductsAddEvent(title: findByKey("title").value, barCode: findByKey("barCode").value));
+              },
             ),
           );
         }),
