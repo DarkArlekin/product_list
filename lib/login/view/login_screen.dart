@@ -28,10 +28,10 @@ class LoginScreen extends StatelessWidget {
                   height: 8,
                 ),
                 LoginButton(handler: () {
+                  context.read<LoginBloc>().add(LoggedInEvent());
                   if (State is LoginSuccess) {
                     Navigator.pushNamed(context, Routes.loadScreen);
                   }
-                  context.read<LoginBloc>().add(LoggedInEvent());
                 })
               ],
             ),

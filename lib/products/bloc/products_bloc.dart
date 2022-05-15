@@ -22,8 +22,10 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
     on<ProductsSelectEvent>(_onProductsSelectEvent);
     _productSubscription =
         productRepository.getAllProducts().listen((products) {
-      add(ProductsGetEvent(products));
-    });
+      add(ProductsGetEvent(products), );
+    }, onError: (Object error) {
+          print('error');
+        });
     // productRepository.
   }
 

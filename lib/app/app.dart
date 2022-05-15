@@ -7,6 +7,9 @@ import 'package:product_list/login/bloc/login_bloc.dart';
 import 'package:product_list/user/bloc/user_bloc.dart';
 import 'package:user_repository/user_repository.dart';
 
+import 'package:product_list/products/bloc/products_bloc.dart';
+import 'package:product_repository/product_repository.dart';
+
 class MyApp extends StatelessWidget {
   final UserRepository userRepository;
 
@@ -21,6 +24,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => LoginBloc(LoginRepository()),
+        ),
+        BlocProvider(
+          create: (context) => ProductsBloc(ProductRepository()),
         ),
       ],
       child: MaterialApp(
