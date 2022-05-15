@@ -1,20 +1,41 @@
 import 'dart:math';
 
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
-class AlertFormDialog extends StatelessWidget {
-  final Map<String, String> inputData = {};
+class DialogTextField extends Equatable {
+  final String key;
+  final String hintText;
+  final String? Function(String?) validator;
+  final TextEditingController controller = TextEditingController();
+  String value;
+  bool readOnly;
 
-  AlertFormDialog({Key? key}) : super(key: key);
+  DialogTextField({
+    required this.key,
+    required this.hintText,
+    required this.validator,
+    this.readOnly = false,
+    this.value = "",
+  });
+
+  @override
+  // todo: impl
+  List<Object> get props => [validator, key, controller, hintText];
+}
+
+class AlertFormDialog extends StatelessWidget {
+  // StatelessWidget because don`t need rebuild on change [isValid]
+  final List<DialogTextField> textFields;
+  bool isValid = false;
+
+  AlertFormDialog({Key? key, required this.textFields}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Dialog(
       child: Container(
-        width: MediaQuery
-            .of(context)
-            .size
-            .width - 16,
+        width: MediaQuery.of(context).size.width - 16,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8), color: Colors.grey[100]),
         padding: const EdgeInsets.fromLTRB(16, 16, 24, 4),
@@ -28,9 +49,9 @@ class AlertFormDialog extends StatelessWidget {
             ),
             const SizedBox(height: 30),
             AlertForm(
-              onCorrectSubmit: (key, value) {
-                print("$key: $value");
-                inputData[key] = value;
+              textFields: textFields,
+              onValidate: (isValid) {
+                this.isValid = isValid;
               },
             ),
             const SizedBox(height: 30),
@@ -45,9 +66,7 @@ class AlertFormDialog extends StatelessWidget {
                     child: const Text("Cancel")),
                 TextButton(
                     onPressed: () {
-                      print(inputData);
-                      if (inputData["barCode"] != null &&
-                          inputData["title"] != null) {
+                      if (isValid) {
                         Navigator.pop(context);
                       }
                     },
@@ -64,9 +83,14 @@ class AlertFormDialog extends StatelessWidget {
 }
 
 class AlertForm extends StatefulWidget {
-  final void Function(String, String) onCorrectSubmit;
+  final void Function(bool) onValidate;
+  final List<DialogTextField> textFields;
 
-  const AlertForm({Key? key, required this.onCorrectSubmit}) : super(key: key);
+  const AlertForm({
+    Key? key,
+    required this.onValidate,
+    required this.textFields,
+  }) : super(key: key);
 
   @override
   State<AlertForm> createState() => _AlertFormState();
@@ -74,47 +98,60 @@ class AlertForm extends StatefulWidget {
 
 class _AlertFormState extends State<AlertForm> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  final TextEditingController barCodeController = TextEditingController();
   bool _barCodeReadonly = false;
 
   @override
   Widget build(BuildContext context) {
+    void onChanged() {
+      final bool isValid = formKey.currentState!.validate();
+      widget.onValidate(isValid);
+      if (isValid) {
+        formKey.currentState!.save();
+      }
+    }
+
+    final DialogTextField? barFormField =
+        widget.textFields.firstWhere((textField) => textField.key == "barCode");
+    if (barFormField != null) {
+      barFormField.controller.addListener(() {
+        WidgetsBinding.instance?.addPostFrameCallback((_) => onChanged());
+      });
+    }
+
     return Form(
       key: formKey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          AlertFormField(
-            textEditingController: TextEditingController(),
-            formKey: formKey,
-            onSaved: (value) {
-              widget.onCorrectSubmit("title", value ?? "");
-            },
-            hintText: 'Product Title',
-          ),
-          AlertFormField(
-            textEditingController: barCodeController,
-            formKey: formKey,
-            onSaved: (value) {
-              widget.onCorrectSubmit("barCode", value ?? "");
-            },
-            readOnly: _barCodeReadonly,
-            hintText: 'Product Bar Code',
-          ),
-          CheckboxListTile(
-            contentPadding: EdgeInsets.zero,
-            secondary: const Text("auto bar code"),
-            value: _barCodeReadonly,
-            onChanged: (bool? value) {
-              if (value != null && value) {
-                barCodeController.text =
-                "${Random().nextInt(899999999) + 100000000}";
-              }
-              setState(() {
-                _barCodeReadonly = value ?? false;
-              });
-            },
-          ),
+          ...widget.textFields.map((textField) => AlertFormField(
+                formKey: formKey,
+                hintText: textField.hintText,
+                onChanged: (string) {
+                  onChanged();
+                },
+                onSaved: (value) {
+                  textField.value = value ?? "";
+                },
+                textEditingController: textField.controller,
+                readOnly: textField.readOnly,
+                validator: textField.validator,
+              )),
+          if (barFormField != null)
+            CheckboxListTile(
+              contentPadding: EdgeInsets.zero,
+              secondary: const Text("auto bar code"),
+              value: _barCodeReadonly,
+              onChanged: (bool? value) {
+                if (value != null && value) {
+                  // todo: should be unique checked
+                  barFormField.controller.text =
+                      "${Random().nextInt(899999999) + 100000000}";
+                }
+                setState(() {
+                  _barCodeReadonly = value ?? false;
+                });
+              },
+            ),
         ],
       ),
     );
@@ -123,6 +160,8 @@ class _AlertFormState extends State<AlertForm> {
 
 class AlertFormField extends StatelessWidget {
   final void Function(String?) onSaved;
+  final void Function(String?) onChanged;
+  final String? Function(String?) validator;
   final GlobalKey<FormState> formKey;
   final String hintText;
   final bool readOnly;
@@ -132,23 +171,15 @@ class AlertFormField extends StatelessWidget {
     Key? key,
     required this.hintText,
     required this.onSaved,
+    required this.onChanged,
+    required this.validator,
     required this.formKey,
-    this.readOnly = false,
+    required this.readOnly,
     required this.textEditingController,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    void onChanged() {
-      formKey.currentState!.validate();
-      formKey.currentState!.save();
-    }
-    textEditingController.addListener(() {
-      // bad code
-      WidgetsBinding.instance
-          ?.addPostFrameCallback((_) => onChanged());
-    });
-
     return TextFormField(
       readOnly: readOnly,
       controller: textEditingController,
@@ -156,15 +187,8 @@ class AlertFormField extends StatelessWidget {
         hintText: hintText,
       ),
       onSaved: onSaved,
-      onChanged: (value) {
-        onChanged();
-      },
-      validator: (String? value) {
-        if (value == null || value.isEmpty) {
-          return 'Please enter some text';
-        }
-        return null;
-      },
+      onChanged: onChanged,
+      validator: validator,
     );
   }
 }

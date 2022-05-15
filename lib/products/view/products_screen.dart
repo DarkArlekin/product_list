@@ -27,7 +27,32 @@ class ProductsScreen extends StatelessWidget {
         bottomNavigationBar: AppBottomBar(onTap: () {
           showDialog(
             context: context,
-            builder: (BuildContext context) => AlertFormDialog(),
+            builder: (BuildContext context) => AlertFormDialog(
+              textFields: [
+                DialogTextField(
+                  hintText: 'Product Title',
+                  key: 'title',
+                  validator: (String? value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter some text';
+                    }
+                    return null;
+                  },
+                ),
+                DialogTextField(
+                  hintText: 'Bar Code',
+                  key: 'barCode',
+                  validator: (String? value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter some text';
+                    } else if (value.length != 9) {
+                      return 'Bar code must have 9 symbols';
+                    }
+                    return null;
+                  },
+                ),
+              ],
+            ),
           );
         }),
         extendBodyBehindAppBar: true,
