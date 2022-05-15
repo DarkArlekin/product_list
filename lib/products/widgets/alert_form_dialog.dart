@@ -25,6 +25,8 @@ class DialogTextField extends Equatable {
   List<Object> get props => [validator, key, controller, hintText];
 }
 
+/// Here should be a Bloc but you will see StatefulWidget )
+
 class AlertFormDialog extends StatelessWidget {
   // StatelessWidget because don`t need rebuild on change [isValid]
   final List<DialogTextField> textFields;
